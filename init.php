@@ -14,7 +14,7 @@ $kleeja_plugin['Plugins_updater']['information'] = array(
     # the casual name of this plugin, anything can a human being understands
     'plugin_title' => array(
         'en' => 'Plugins updater',
-        'ar' => 'فاحص اصدار الاضافات'
+        'ar' => 'محدث الاضافات'
     ),
     # who wrote this plugin?
     'plugin_developer' => 'Mitan Omar',
