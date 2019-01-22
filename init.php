@@ -29,7 +29,7 @@ $kleeja_plugin['Plugins_updater']['information'] = array(
      * and kleeja will read it .
      * if you did not select it , we will check from kleeja github link
      */
-    'plugin_check_version_link' => 'https://raw.githubusercontent.com/MitanOmar/Plugin_Version_Checker/master/init.php',
+    'plugin_check_version_link' => 'https://raw.githubusercontent.com/MitanOmar/plugins_updater/master/init.php',
 
     # explain what is this plugin, why should i use it?
     'plugin_description' => array(
