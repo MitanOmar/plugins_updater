@@ -1,74 +1,64 @@
 
-<IF NAME="current_smt == general">
-
-<!-- Breadcrumbs -->
-<ol class="breadcrumb">
-	<li class="breadcrumb-item"><a href="./">{lang.R_CPINDEX}</a></li>
-	<li class="breadcrumb-item active">{lang.R_CHECK_UPDATE}</li>
-</ol>
-
-<div class="alert <IF NAME="error">alert-warning<ELSE>alert-info</IF>">{text}</div>
-
-
-<ELSEIF NAME="current_smt == howto">
-
-	<!-- Breadcrumbs -->
-	<ol class="breadcrumb">
-		<li class="breadcrumb-item"><a href="./">{lang.R_CPINDEX}</a></li>
-		<li class="breadcrumb-item active">{lang.HOW_UPDATE_KLEEJA}</li>
-	</ol>
-
-	<ul class="update_list">
-		<li>{lang.HOW_UPDATE_KLEEJA_STEP1}</li>
-		<li>{lang.HOW_UPDATE_KLEEJA_STEP2}</li>
-		<li>{lang.HOW_UPDATE_KLEEJA_STEP3}
-			<input class="form-control" type="text" value="{update_link}" readonly>
-		</li>
-	</ul>
-
-<ELSEIF NAME="current_smt == check_plugin_update">	
+<IF NAME="current_smt == general">	
 
 	<!-- Breadcrumbs -->
 	<ol class="breadcrumb">
 		<li class="breadcrumb-item"><a href="./">{lang.R_CPINDEX}</a></li>
 		<li class="breadcrumb-item active">{olang.CHECK_PLUGIN_UPDATE}</li>
 	</ol>
-     <IF NAME="connection_error">
-	 
-	  <div class="alert alert-warning"> {olang.ERR_CONN} </div>
-	 
-	 
-	 <ELSE>
-					<LOOP NAME="output">
 
-						<div class="alert alert-{{error}}">
-						 {{pluginName}} : {{report}}  
-						 
-						 <IF LOOP="error == warning"> 
-						( {olang.U_VERSION} = {{local_version}} / {olang.AP_VERSION} = {{online_version}} )
-						<IF LOOP="from_kleeja_github">
-						 <a href="{{update_link}}" class="btn btn-link">{olang.UPDT}</a>
-						 </IF>
-						 </IF>
-						 
-						 
-						</div>
-						
-				</LOOP>
-</IF>
-				
-<ELSEIF NAME="current_smt == download_plugin">	
+<div id="updateInfo" class="alert">
+	<img src="{STYLE_PATH_ADMIN}images/ajax-loader-small.gif" />
+</div>
+<script>
+setTimeout(function(){
+	$.ajax({
+		url: './?cp=p_check_plugins_update&smt=check&_ajax_=1',
+		dataType: 'json',
+		cache: false,
+		success: function (data) {
+			if(data.content){
+				$('#updateInfo').html('');
 
-	<!-- Breadcrumbs -->
-	<ol class="breadcrumb">
-		<li class="breadcrumb-item"><a href="./">{lang.R_CPINDEX}</a></li>
-		<li class="breadcrumb-item active">update plugin</li>
-	</ol>
-	 
-	 
-	 <div class="alert <IF NAME="update_err">alert-warning<ELSE>alert-info</IF>"> {update_msg} </div>
-					
-		
-	
+				$.each(data.content, function(i, item) {
+					var div = item.pluginName +' : '+ item.report;
+					if(item.error == 'warning') {
+						div += '( {olang.U_VERSION} = ' + item.local_version +' / {olang.AP_VERSION} =' + item.online_version +' )'
+						if(item.from_kleeja_github) {
+							div += '<a href="javascript:void" onclick="updatePlugin(\''+item.pluginName+'\')" class="btn btn-link">{olang.UPDT}</a>';
+						}
+					}
+
+					$('#updateInfo').append('<div id="d_'+item.pluginName+'" class="alert alert-'+item.error+'">'+ div +'</div>');
+				});
+			} else {
+				this.error();
+			}
+		},
+		error: function(data) {
+			$('#updateInfo').html(data.responseJSON.content).addClass('alert-danger');
+		}
+	});
+}, 300);
+
+function updatePlugin(plugin) {
+		$.ajax({
+		url: './?cp=p_check_plugins_update&smt=update&plugin='+plugin+'&_ajax_=1',
+		dataType: 'json',
+		cache: false,
+		success: function (data) {
+			if(data.content){
+				$('#d_'+plugin).html(data.content);
+			} else {
+				this.error();
+			}
+		},
+		error: function(data) {
+			$('#d_'+plugin).html(data.responseJSON.content).addClass('alert-danger');
+		}
+	});
+}
+</script>
+
 
 </IF>
