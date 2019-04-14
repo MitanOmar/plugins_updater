@@ -38,9 +38,9 @@ $kleeja_plugin['plugins_updater']['information'] = array(
     ),
 
     # Min version of Kleeja that's requiered to run this plugin
-    'plugin_kleeja_version_min' => '3.0',
+    'plugin_kleeja_version_min' => '2.4',
     # Max version of Kleeja that support this plugin, use 0 for unlimited
-    'plugin_kleeja_version_max' => '3.9',
+    'plugin_kleeja_version_max' => '3.0.2',
     # should this plugin run before others?, 0 is normal, and higher number has high priority
     'plugin_priority' => 0
 );
